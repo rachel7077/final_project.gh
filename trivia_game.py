@@ -1,6 +1,3 @@
-# Things to Do
-# - figure out where to use inheritance
-
 import csv
 import random
 import tkinter as tk
@@ -8,6 +5,14 @@ from tkinter import simpledialog
 from tkinter import messagebox
 
 class Questions():
+    """
+    Represents an object that contains a list of questions and answers
+    to ask the user
+    contains points, representing how many points the user currently has
+    contains lives, representing how many lives the user has remaining (starting with 3)
+    contains a list of multiple choice questions and answers
+    contains a list of true or false questions and answers
+    """
     def __init__(self, points = 0, lives = 3, list_of_mc = []):
         self.points = points
         self.lives = lives
@@ -21,10 +26,15 @@ class Questions():
         return "{}\n".format(str_mc)
 
     def addQuestionMc(self):
+        """
+        grabs the multiple choice questions and answers from a csv file
+        and creates a new multiple choice question, adding them to the list of multiple
+        choice questions
+        Returns: a list of multiple choice questions
+        """
         list = []
         with open('multiple_choice.csv', encoding='utf-8') as myFile:
             reader = csv.reader(myFile)
-            
             for arr in reader:
                 choices = {}
                 title = arr[0]
@@ -37,10 +47,15 @@ class Questions():
             return list
         
     def addQuestionTf(self):
+        """
+        grabs the true or false questions and answers from a csv file
+        and creates a new true or false question, adding them to the list of 
+        the true or false questions
+        Returns: a list of true or false questions
+        """
         list = []
         with open('true_or_false.csv', encoding='utf-8') as myFile:
                 reader = csv.reader(myFile)
-            
                 for arr in reader:
                     title = arr[0]
                     question = arr[1]
@@ -49,6 +64,11 @@ class Questions():
                 return list
         
     def getRandQuest(self, cat):
+        """
+        takes in a type of question and grabs a random question
+        from the list of questions based on the given type of question
+        returns: a question
+        """
         if cat == 'a':
             num = random.randint(0, len(self.list_of_mc)-1)
             q = self.list_of_mc[num]
@@ -61,6 +81,12 @@ class Questions():
             return q
 
     def users_answer(self, cat):
+        """
+        takes in a selected type of question and gets the answer to the chosen
+        question from the user, comparing their answer to the actual answer
+        displays the question, number of points of the user, or lives left
+        returns: whether the user was correct or incorrect
+        """
         question = self.getRandQuest(cat)
         ROOT = tk.Tk()
         ROOT.withdraw()
@@ -79,24 +105,11 @@ class Questions():
             messagebox.showinfo("Information", 'Incorrect \nLives left: ' + str(self.lives))
             return 'Incorrect'
 
-class MultipleChoice():
-    def __init__(self, title = '', question = '', answer = '', choices = {}):
-        self.title = title
-        self.question = question
-        self.answer = answer
-        self.choices = choices
-
-    def __str__(self):
-        answer_list = []
-        for k in self.choices:
-            answer_list.append(str(k) + ': ' + str(self.choices[k]) + '\n')
-        return "Title: {} \nQuestion: {} \n{}".format(self.title, self.question, ''.join(answer_list)) 
-
-    def compareAnswer(self, answer):
-        return self.answer == answer
-    
-class TrueOrFalse():
-    def __init__(self, title = '', question = '', answer = False):
+class Question():
+    """
+    represents a generic question with a title, question, and answer
+    """
+    def __init__(self, title = '', question = '', answer = ''):
         self.title = title
         self.question = question
         self.answer = answer
@@ -105,17 +118,54 @@ class TrueOrFalse():
         return "Title: {} \nQuestion: {} \n".format(self.title, self.question) 
 
     def compareAnswer(self, answer):
+        """
+        compares the given answer to the answer of this question
+        return: boolean
+        """
         return self.answer.lower() == answer.lower()
 
-q = Questions()
-ROOT = tk.Tk()
-ROOT.withdraw()
-while q.points < 50:
-    cat = simpledialog.askstring(title="Test",
+class MultipleChoice(Question):
+    """
+    represents a multiple choice question with a title, question, answer,
+    and the choices of the question
+    """
+    def __init__(self, title = '', question = '', answer = '', choices = {}):
+        self.choices = choices
+        super().__init__(title, question, answer)
+
+    def __str__(self):
+        s = super().__str__()
+        answer_list = []
+        for k in self.choices:
+            answer_list.append(str(k) + ': ' + str(self.choices[k]) + '\n')
+        return s +  "\n{}".format(''.join(answer_list)) 
+    
+class TrueOrFalse(Question):
+    """
+    represents a true or false question with a title, question, and answer
+    """
+    def __init__(self, title = '', question = '', answer = False):
+        super().__init__(title, question, answer)
+
+    def __str__(self):
+        return super().__str__()
+
+def ask_questions():
+    """
+    asks the user questions, looking for input from the user on which type of question
+    to choose, checks to see if the user has reached 0 lives or has reached 50 points
+    """
+    q = Questions()
+    ROOT = tk.Tk()
+    ROOT.withdraw()
+    while q.points < 50:
+        cat = simpledialog.askstring(title="Test",
                                   prompt="Choose a type of question \n a. Multiple Choice \n b. True or False \n")
-    question = q.users_answer(cat)
-    if q.lives == 0:
-        messagebox.showinfo("Information", 'You lose')
-        break
-if q.points >= 50:
-    messagebox.showinfo("Information", 'You win!')
+        question = q.users_answer(cat)
+        if q.lives == 0:
+            messagebox.showinfo("Information", 'You lose')
+            break
+    if q.points >= 50:
+        messagebox.showinfo("Information", 'You win!')
+
+print(ask_questions())
