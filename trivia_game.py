@@ -1,3 +1,9 @@
+# Things to do
+# - allow user to enter name
+# - store name and score into a file
+# - end game state
+# - add other categories
+
 import csv
 import random
 import tkinter as tk
@@ -13,7 +19,7 @@ class Questions():
     contains a list of multiple choice questions and answers
     contains a list of true or false questions and answers
     """
-    def __init__(self, points = 0, lives = 3, list_of_mc = []):
+    def __init__(self, points = 0, lives = 3, list_of_mc = [], list_of_tf = []):
         self.points = points
         self.lives = lives
         self.list_of_mc = self.addQuestionMc()
@@ -101,7 +107,6 @@ class Questions():
             return 'Correct'
         else:
             self.lives -= 1
-            print('Lives left: ' + str(self.lives))
             messagebox.showinfo("Information", 'Incorrect \nLives left: ' + str(self.lives))
             return 'Incorrect'
 
@@ -115,7 +120,7 @@ class Question():
         self.answer = answer
 
     def __str__(self):
-        return "Title: {} \nQuestion: {} \n".format(self.title, self.question) 
+        return "Movie: {} \nQuestion: {} \n".format(self.title, self.question) 
 
     def compareAnswer(self, answer):
         """
@@ -158,8 +163,10 @@ def ask_questions():
     q = Questions()
     ROOT = tk.Tk()
     ROOT.withdraw()
+    name = simpledialog.askstring(title="User",
+                                  prompt="Enter your name:")
     while q.points < 50:
-        cat = simpledialog.askstring(title="Test",
+        cat = simpledialog.askstring(title="Trivia Game",
                                   prompt="Choose a type of question \n a. Multiple Choice \n b. True or False \n")
         question = q.users_answer(cat)
         if q.lives == 0:
@@ -167,5 +174,11 @@ def ask_questions():
             break
     if q.points >= 50:
         messagebox.showinfo("Information", 'You win!')
+    with open("leaderboard.txt", 'a') as myFile:
+        myFile.write(str(name) + ": " + str(q.points) + "\n")
 
 print(ask_questions())
+
+# Questions to ask
+# - leaderboard: the file is local to my computer, is that fine?
+# - should I add the short answer questions?
