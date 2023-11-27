@@ -1,7 +1,5 @@
 # Things to do
-# - allow user to enter name
-# - store name and score into a file
-# - end game state
+# - leaderboard: figure out how to deal with multiple ppl with same score
 # - add other categories
 
 import csv
@@ -175,10 +173,55 @@ def ask_questions():
     if q.points >= 50:
         messagebox.showinfo("Information", 'You win!')
     with open("leaderboard.txt", 'a') as myFile:
-        myFile.write(str(name) + ": " + str(q.points) + "\n")
+        myFile.write("\n" + str(name) + ": " + str(q.points))
+    leaderboard()
+    close()
+    
+def close():
+   """
+   Exits out of tk.inter when game has been completed
+   """
+   end = tk.Tk()
+   end.quit()
 
-print(ask_questions())
+def leaderboard():
+    """
+    gets the top three scores from the leaderbord txt file
+    Return: a messagebox containing the top three scores and scorers
+    """
+    dict = {}
+    with open("leaderboard.txt", 'r') as readFile:
+        while True:
+            line = readFile.readline()
+            if not line:
+                break
+            strings = "".join(line).strip("\n")
+            list_user = strings.split(":")
+            if len(list_user) >= 2:
+                name = list_user[0]
+                score = list_user[1]
+                dict[score] = name
+        sorted_dict = sorted(dict)
+        dict_len = len(sorted_dict)
+        top_score = sorted_dict[dict_len-1]
+        second_score = sorted_dict[dict_len-2]
+        third_score = sorted_dict[dict_len-3]
+        first = dict[top_score]
+        second = dict[second_score]
+        third = dict[third_score]
+        if dict_len >= 3:
+            messagebox.showinfo("Leaderboard", "Leaderboard \n1. " + first + ": " + str(top_score) + " points" + "\n2. " + second + ": " + str(second_score) + " points" + "\n3. " + third + ": " + str(third_score) + " points")
+        elif dict_len == 2:
+            messagebox.showinfo("Leaderboard", "Leaderboard \n1. " + first + ": " + str(top_score) + " points" + "\n2. " + second + ": " + str(second_score) + " points")
+        elif dict_len == 1:
+            messagebox.showinfo("Leaderboard", "Leaderboard \n1. " + first + ": " + str(top_score) + " points")
+        else:
+            messagebox.showinfo("Leaderboard", "No top scorers.")
+
+print(leaderboard())
+#print(ask_questions())
 
 # Questions to ask
 # - leaderboard: the file is local to my computer, is that fine?
 # - should I add the short answer questions?
+# - is this good for extra credit? 

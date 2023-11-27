@@ -1,2 +1,11 @@
 Rachel: 50
 Bob: 20
+Sam: 15
+Julia: 30
+rachel: 0
+a: 0
+Rachel H: 50
+Tommy: 0
+sandra: 50
+carly: 0
+sally: 50
