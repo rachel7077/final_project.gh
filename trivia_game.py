@@ -20,8 +20,10 @@ class Questions():
     def __init__(self, points = 0, lives = 3, list_of_mc = [], list_of_tf = []):
         self.points = points
         self.lives = lives
-        self.list_of_mc = self.addQuestionMc()
+        self.list_of_mc = self.addQuestionMc()  # fix this so that the question class doesn't need to know about the list of subtypes
         self.list_of_tf = self.addQuestionTf()
+        # maybe add short answer quesiton -> lowercase everything, remove special characters, multiple answers to check
+        # short answer include list of answers
     
     def __str__(self):
         str_mc = ""
@@ -218,8 +220,8 @@ def leaderboard():
         else:
             messagebox.showinfo("Leaderboard", "No top scorers.")
 
-print(leaderboard())
-#print(ask_questions())
+#print(leaderboard())
+print(ask_questions())
 
 # Questions to ask
 # - leaderboard: the file is local to my computer, is that fine?

@@ -9,3 +9,5 @@ Tommy: 0
 sandra: 50
 carly: 0
 sally: 50
+Rachel: 10
+rachel: 0
