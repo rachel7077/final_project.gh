@@ -11,3 +11,19 @@ carly: 0
 sally: 50
 Rachel: 10
 rachel: 0
+andre: 0
+georgia: 30
+j: 0
+k: 0
+f: 0
+j: 0
+a: 10
+a: 0
+john: 15
+f: 0
+a: 0
+f: 50
+jack: 40
+jeremy: 35
+john cena: 10
+Furnandez: 50
