@@ -1,7 +1,3 @@
-# Things to do
-# - add other categories
-# - ask about editing window for trivia game
-
 import csv
 import random
 import tkinter as tk
@@ -43,6 +39,17 @@ class MultipleChoice(Question):
             answer_list.append(str(k) + ': ' + str(self.choices[k]) + '\n')
         return s +  "\n{}".format(''.join(answer_list)) 
     
+    def compare_answer(self, answer):
+        """
+        compares the given answer to the answer of this question
+        returns a string if the given answer is not one of the expected options
+        return: boolean or string
+        """
+        if answer.lower() != 'a' and answer.lower() != 'b' and answer.lower() != 'c':
+            return 'incorrect entry'
+        else:
+            return self.answer.lower() == answer.lower()
+        
 class TrueOrFalse(Question):
     """
     represents a true or false question with a title, question, and answer
@@ -52,58 +59,59 @@ class TrueOrFalse(Question):
 
     def __str__(self):
         return super().__str__()
+    
+    def compare_answer(self, answer):
+        """
+        compares the given answer to the answer of this question
+        returns a string if the given answer is not one of the expected options
+        return: boolean or string
+        """
+        if answer.lower() != 'true' and answer.lower() != 'false':
+            return 'incorrect entry'
+        else:
+            return self.answer.lower() == answer.lower()
 
 class Quiz():
     """
-    Represents an object that contains a list of questions and answers
-    to ask the user
+    Represents an object that contains a dictionary of questions and answers
+    to ask the user (the dictionary has keys representing the type of question and 
+    the corresponding values are lists of questions and answers)
     contains points, representing how many points the user currently has
     contains lives, representing how many lives the user has remaining (starting with 3)
     contains a list of questions that can either be multiple choice or short answer
     """
-    def __init__(self, points = 0, lives = 3, list_of_q = []):
+    def __init__(self, points = 0, lives = 3, list_of_q = {}):
         self.points = points
         self.lives = lives
         self.list_of_q = list_of_q
-    
-    def __str__(self):
-        str_q = ""
-        for m in self.list_of_q:
-            str_q += str(m) + '\n'
-        return "{}\n".format(str_q)
         
     def add_question(self, questions):
         """
         allows the user to add questions to the quiz
         """
+        question_type = ""
         for q in questions:
-            self.list_of_q.append(q)
+            question_type = type(q)
+        self.list_of_q[question_type] = questions
         
     def get_rand_quest(self, cat):
         """
         takes in a type of question and grabs a random question
         from the list of questions based on the given type of question
         if an incorrect category was given, prompts the user to try again
+        or if an incorrect answer was given, user is prompted to try again
         returns: a question
         """
-        list_of_mc = []
-        list_of_tf = []
-        # adding multiple choice questions to a list of multiple choice questions
-        for q_mc in self.list_of_q:
-            if isinstance(q_mc, MultipleChoice):
-                list_of_mc.append(q_mc)
-        # adding true or false questions to a list of true or false questions
-        for q_tf in self.list_of_q:
-            if isinstance(q_tf, TrueOrFalse):
-                list_of_tf.append(q_tf)
         # returns a random multiple choice question
         if cat == 'a':
+            list_of_mc = self.list_of_q.get(MultipleChoice)
             num = random.randint(0, len(list_of_mc)-1)
             q = list_of_mc[num]
             list_of_mc.pop(num)
             return q
         # returns a random true or false question
         elif cat == 'b':
+            list_of_tf = self.list_of_q.get(TrueOrFalse)
             num = random.randint(0, len(list_of_tf)-1)
             q = list_of_tf[num]
             list_of_tf.pop(num)
@@ -126,6 +134,10 @@ class Quiz():
             messagebox.showinfo("Information", 'Try again ')
         else:
             answer = simpledialog.askstring(title="Question",
+                                  prompt=question)
+            while question.compare_answer(answer) == 'incorrect entry':
+                 messagebox.showinfo("Information", 'Try again ')
+                 answer = simpledialog.askstring(title="Question",
                                   prompt=question)
             if question.compare_answer(answer):
                 self.points += 10
@@ -243,4 +255,4 @@ def leaderboard():
         else:
             messagebox.showinfo("Leaderboard", "No top scorers.")
 
-#print(ask_questions())
+print(ask_questions())

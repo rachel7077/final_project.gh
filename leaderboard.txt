@@ -27,3 +27,7 @@ jack: 40
 jeremy: 35
 john cena: 10
 Furnandez: 50
+katelin: 50
+rachel: 20
+g: 20
+a: 50
