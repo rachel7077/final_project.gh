@@ -253,4 +253,4 @@ def leaderboard():
             messagebox.showinfo("Leaderboard", "No top scorers.")
 
 # runs the game
-#print(ask_questions())
+print(ask_questions())
