@@ -8,14 +8,15 @@ No dependencies need to be downloaded to run the game; however, you must ensure
 that the true_or_false.csv, multiple_choice.csv, and leaderboard.txt files are 
 downloaded and in the same folder as the trivia_game.py file.
 
-To run the game, download all the files and click run without debugging. A screen 
-should pop up prompting you to enter a name. Choose a name to enter, and then 
-instructions on how to play the game will pop up. Hit enter then type in a or b 
-depending on which question type you would like to answer. If you do not type in 
-an expected option, the game will prompt you to try again. Continue playing until
-you have reached 50 points or run out of lives (every player starts with 3 lives).
-At the end, a screen will pop up saying wether you won or lost, and then, a 
-leaderboard will appear with the top 3 highest scorers. 
+To run the game, download all the files and click run without debugging (make 
+sure that print(ask_questions()) is uncommented). A screen should pop up prompting 
+you to enter a name. Choose a name to enter, and then instructions on how to play 
+the game will pop up. Hit enter then type in a or b depending on which question type 
+you would like to answer. If you do not type in an expected option, the game will 
+prompt you to try again. Continue playing until you have reached 50 points or run 
+out of lives (every player starts with 3 lives). At the end, a screen will pop up 
+saying wether you won or lost, and then, a leaderboard will appear with the top 3 
+highest scorers. 
 
 ## Markdown
 
