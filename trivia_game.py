@@ -83,10 +83,10 @@ class Quiz():
     contains a list of questions that can either be multiple choice or short answer
     contains an instance of tkinter which is the gui that creates the user interface
     """
-    def __init__(self, root = "", points = 0, lives = 3, list_of_q = {}):
-        self.root = root
-        self.points = points
-        self.lives = lives
+    def __init__(self, list_of_q = {}):
+        self.root = tk.Tk()
+        self.points = 0
+        self.lives = 3
         self.list_of_q = list_of_q
         
     def add_question(self, questions):
@@ -194,14 +194,13 @@ def ask_questions():
     # creates lists of multiple choice and true or false questions
     list_mc = list_of_mc('multiple_choice.csv')
     list_tf = list_of_tf('true_or_false.csv')
-    ROOT = tk.Tk()
 
     # adds the questions to a quiz
-    q = Quiz(ROOT)
+    q = Quiz()
     q.add_question(list_mc)
     q.add_question(list_tf)
 
-    ROOT.withdraw() 
+    q.root.withdraw() 
     name = simpledialog.askstring(title="User",
                                   prompt="Enter your name:")
     messagebox.showinfo("Information", 'How to Play\nType a or b for multiple choice or true or false. \
@@ -219,7 +218,7 @@ def ask_questions():
     with open("leaderboard.txt", 'a') as myFile:
         myFile.write("\n" + str(name) + ": " + str(q.points))
     leaderboard()
-    ROOT.quit()
+    q.root.quit()
 
 def leaderboard():
     """

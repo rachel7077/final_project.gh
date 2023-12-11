@@ -39,3 +39,5 @@ tommy: 50
 None: 10
 h: 0
 None: 20
+t: 50
+cindy: 20
