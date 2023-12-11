@@ -26,7 +26,7 @@ class Question():
 class MultipleChoice(Question):
     """
     represents a multiple choice question with a movie title, question, answer,
-    and the choices of the question
+    and the choices of the question represented as a dictionary 
     """
     def __init__(self, title = '', question = '', answer = '', choices = {}):
         self.choices = choices
@@ -54,7 +54,7 @@ class TrueOrFalse(Question):
     """
     represents a true or false question with a title, question, and answer
     """
-    def __init__(self, title = '', question = '', answer = False):
+    def __init__(self, title = '', question = '', answer = ''):
         super().__init__(title, question, answer)
 
     def __str__(self):
@@ -66,10 +66,12 @@ class TrueOrFalse(Question):
         returns a string if the given answer is not one of the expected options
         return: boolean or string
         """
-        if answer.lower() != 'true' and answer.lower() != 'false':
+        if answer.lower() != 'true' and answer.lower() != 'false' and answer.lower() != 'f' and answer.lower() != 't':
             return 'incorrect entry'
-        else:
-            return self.answer.lower() == answer.lower()
+        elif self.answer.lower() == 'true':
+            return answer.lower() == 'true' or answer.lower() == 't'
+        elif self.answer.lower() == 'false':
+            return answer.lower() == 'false' or answer.lower() == 'f'
 
 class Quiz():
     """
@@ -79,8 +81,10 @@ class Quiz():
     contains points, representing how many points the user currently has
     contains lives, representing how many lives the user has remaining (starting with 3)
     contains a list of questions that can either be multiple choice or short answer
+    contains an instance of tkinter which is the gui that creates the user interface
     """
-    def __init__(self, points = 0, lives = 3, list_of_q = {}):
+    def __init__(self, root = "", points = 0, lives = 3, list_of_q = {}):
+        self.root = root
         self.points = points
         self.lives = lives
         self.list_of_q = list_of_q
@@ -88,6 +92,7 @@ class Quiz():
     def add_question(self, questions):
         """
         allows the user to add questions to the quiz
+        makes it easier to expand the quiz 
         """
         question_type = ""
         for q in questions:
@@ -127,8 +132,7 @@ class Quiz():
         returns: whether the user was correct or incorrect
         """
         question = self.get_rand_quest(cat)
-        ROOT = tk.Tk()
-        ROOT.withdraw()
+        self.root.withdraw()
         # if the user enters an incorrect category, prompts the user to try again
         if question == 'try again':
             messagebox.showinfo("Information", 'Try again ')
@@ -190,19 +194,19 @@ def ask_questions():
     # creates lists of multiple choice and true or false questions
     list_mc = list_of_mc('multiple_choice.csv')
     list_tf = list_of_tf('true_or_false.csv')
+    ROOT = tk.Tk()
 
     # adds the questions to a quiz
-    q = Quiz()
+    q = Quiz(ROOT)
     q.add_question(list_mc)
     q.add_question(list_tf)
 
-    ROOT = tk.Tk()
     ROOT.withdraw() 
     name = simpledialog.askstring(title="User",
                                   prompt="Enter your name:")
     messagebox.showinfo("Information", 'How to Play\nType a or b for multiple choice or true or false. \
                         \n If choosing multiple choice, type the letter of the response in. \n If choosing true or false, \
-                        type true or false in.')
+                        type true or false or t or f in.')
     while q.points < 50:
         cat = simpledialog.askstring(title="Trivia Game",
                                   prompt="Choose a type of question \n a. Multiple Choice \n b. True or False \n")
@@ -215,14 +219,7 @@ def ask_questions():
     with open("leaderboard.txt", 'a') as myFile:
         myFile.write("\n" + str(name) + ": " + str(q.points))
     leaderboard()
-    close()
-    
-def close():
-   """
-   Exits out of tk.inter when game has been completed
-   """
-   end = tk.Tk()
-   end.quit()
+    ROOT.quit()
 
 def leaderboard():
     """
@@ -255,4 +252,5 @@ def leaderboard():
         else:
             messagebox.showinfo("Leaderboard", "No top scorers.")
 
-print(ask_questions())
+# runs the game
+#print(ask_questions())

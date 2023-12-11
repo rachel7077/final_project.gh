@@ -31,3 +31,11 @@ katelin: 50
 rachel: 20
 g: 20
 a: 50
+timmy: 20
+tommy: 10
+g: 0
+None: 10
+tommy: 50
+None: 10
+h: 0
+None: 20
