@@ -8,12 +8,15 @@ class Question():
     """
     represents a generic question with a movie title, question, and answer
     """
-    def __init__(self, title = '', question = '', answer = ''):
+    def __init__(self, title = "", question = "", answer = ""):
         self.title = title
         self.question = question
         self.answer = answer
 
     def __str__(self):
+        """
+        returns the question as a string readable for the user
+        """
         return "Movie: {} \nQuestion: {} \n".format(self.title, self.question) 
 
     def compare_answer(self, answer):
@@ -28,15 +31,18 @@ class MultipleChoice(Question):
     represents a multiple choice question with a movie title, question, answer,
     and the choices of the question represented as a dictionary 
     """
-    def __init__(self, title = '', question = '', answer = '', choices = {}):
+    def __init__(self, title = "", question = "", answer = "", choices = {}):
         self.choices = choices
         super().__init__(title, question, answer)
 
     def __str__(self):
+        """
+        returns the question as a string readable for the user
+        """
         s = super().__str__()
         answer_list = []
         for k in self.choices:
-            answer_list.append(str(k) + ': ' + str(self.choices[k]) + '\n')
+            answer_list.append(str(k) + ": " + str(self.choices[k]) + "\n")
         return s +  "\n{}".format(''.join(answer_list)) 
     
     def compare_answer(self, answer):
@@ -45,8 +51,8 @@ class MultipleChoice(Question):
         returns a string if the given answer is not one of the expected options
         return: boolean or string
         """
-        if answer.lower() != 'a' and answer.lower() != 'b' and answer.lower() != 'c':
-            return 'incorrect entry'
+        if answer.lower() != "a" and answer.lower() != "b" and answer.lower() != "c":
+            return "incorrect entry"
         else:
             return self.answer.lower() == answer.lower()
         
@@ -54,10 +60,13 @@ class TrueOrFalse(Question):
     """
     represents a true or false question with a title, question, and answer
     """
-    def __init__(self, title = '', question = '', answer = ''):
+    def __init__(self, title = "", question = "", answer = ""):
         super().__init__(title, question, answer)
 
     def __str__(self):
+        """
+        returns the question as a string readable for the user
+        """
         return super().__str__()
     
     def compare_answer(self, answer):
@@ -66,12 +75,12 @@ class TrueOrFalse(Question):
         returns a string if the given answer is not one of the expected options
         return: boolean or string
         """
-        if answer.lower() != 'true' and answer.lower() != 'false' and answer.lower() != 'f' and answer.lower() != 't':
-            return 'incorrect entry'
-        elif self.answer.lower() == 'true':
-            return answer.lower() == 'true' or answer.lower() == 't'
-        elif self.answer.lower() == 'false':
-            return answer.lower() == 'false' or answer.lower() == 'f'
+        if answer.lower() != "true" and answer.lower() != "false" and answer.lower() != "f" and answer.lower() != "t":
+            return "incorrect entry"
+        elif self.answer.lower() == "true":
+            return answer.lower() == "true" or answer.lower() == "t"
+        elif self.answer.lower() == "false":
+            return answer.lower() == "false" or answer.lower() == "f"
 
 class Quiz():
     """
@@ -89,6 +98,24 @@ class Quiz():
         self.lives = 3
         self.list_of_q = list_of_q
         
+    def __str__(self):
+        """
+        represents the quiz class as a readable string for the user
+        returns multiple choice and/or true or false questions as strings
+        if other question types are added then this method would need to be
+        expanded
+        """
+        final_str = ""
+        if self.list_of_q[MultipleChoice]:
+            final_str += "Multiple Choice \n"
+            for mc in self.list_of_q[MultipleChoice]:
+                final_str+= str(mc) + "\n"
+        if self.list_of_q[TrueOrFalse]:
+            for tf in self.list_of_q[TrueOrFalse]:
+                final_str += "True or False \n"
+                final_str+= str(tf) + "\n"
+        return final_str
+
     def add_question(self, questions):
         """
         allows the user to add questions to the quiz
@@ -104,25 +131,24 @@ class Quiz():
         takes in a type of question and grabs a random question
         from the list of questions based on the given type of question
         if an incorrect category was given, prompts the user to try again
-        or if an incorrect answer was given, user is prompted to try again
-        returns: a question
+        returns: a question or a string
         """
         # returns a random multiple choice question
-        if cat == 'a':
+        if cat == "a":
             list_of_mc = self.list_of_q.get(MultipleChoice)
             num = random.randint(0, len(list_of_mc)-1)
             q = list_of_mc[num]
             list_of_mc.pop(num)
             return q
         # returns a random true or false question
-        elif cat == 'b':
+        elif cat == "b":
             list_of_tf = self.list_of_q.get(TrueOrFalse)
             num = random.randint(0, len(list_of_tf)-1)
             q = list_of_tf[num]
             list_of_tf.pop(num)
             return q
         else:
-            return 'try again'
+            return "try again"
 
     def users_answer(self, cat):
         """
@@ -134,23 +160,23 @@ class Quiz():
         question = self.get_rand_quest(cat)
         self.root.withdraw()
         # if the user enters an incorrect category, prompts the user to try again
-        if question == 'try again':
-            messagebox.showinfo("Information", 'Try again ')
+        if question == "try again":
+            messagebox.showinfo("Information", "Try again ")
         else:
             answer = simpledialog.askstring(title="Question",
                                   prompt=question)
-            while question.compare_answer(answer) == 'incorrect entry':
-                 messagebox.showinfo("Information", 'Try again ')
+            while question.compare_answer(answer) == "incorrect entry":
+                 messagebox.showinfo("Information", "Try again ")
                  answer = simpledialog.askstring(title="Question",
                                   prompt=question)
             if question.compare_answer(answer):
                 self.points += 10
-                messagebox.showinfo("Information", 'Correct \nPoints count: ' + str(self.points))
-                return 'Correct'
+                messagebox.showinfo("Information", "Correct \nPoints count: " + str(self.points))
+                return "Correct"
             else:
                 self.lives -= 1
-                messagebox.showinfo("Information", 'Incorrect \nLives left: ' + str(self.lives))
-                return 'Incorrect'
+                messagebox.showinfo("Information", "Incorrect \nLives left: " + str(self.lives))
+                return "Incorrect"
 
 def list_of_mc(file):
     """
@@ -203,18 +229,18 @@ def ask_questions():
     q.root.withdraw() 
     name = simpledialog.askstring(title="User",
                                   prompt="Enter your name:")
-    messagebox.showinfo("Information", 'How to Play\nType a or b for multiple choice or true or false. \
+    messagebox.showinfo("Information", "How to Play\nType a or b for multiple choice or true or false. \
                         \n If choosing multiple choice, type the letter of the response in. \n If choosing true or false, \
-                        type true or false or t or f in.')
+                        type true or false or t or f in.")
     while q.points < 50:
         cat = simpledialog.askstring(title="Trivia Game",
                                   prompt="Choose a type of question \n a. Multiple Choice \n b. True or False \n")
         question = q.users_answer(cat)
         if q.lives == 0:
-            messagebox.showinfo("Information", 'You lose')
+            messagebox.showinfo("Information", "You lose")
             break
     if q.points >= 50:
-        messagebox.showinfo("Information", 'You win!')
+        messagebox.showinfo("Information", "You win!")
     with open("leaderboard.txt", 'a') as myFile:
         myFile.write("\n" + str(name) + ": " + str(q.points))
     leaderboard()

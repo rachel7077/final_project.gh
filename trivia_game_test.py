@@ -22,12 +22,20 @@ class QuestionTest(unittest.TestCase):
         self.assertEqual(q1.answer, 'Olaf')
         self.assertEqual(q1.title, 'Frozen')
 
+    def test_str(self):
+        """
+        Tests the string method in the question class
+        """
+        q1 = QuestionTest.mkQ('Frozen', 'Who likes warm hugs and loves the idea of summer?', 'Olaf')
+        self.assertEqual(str(q1), "Movie: Frozen \nQuestion: Who likes warm hugs and loves the idea of summer? \n")
+
     def test_compare_answer(self):
         """
         Tests the compare answer method in the question class
         """
         q1 = QuestionTest.mkQ('Frozen', 'Who likes warm hugs and loves the idea of summer?', 'Olaf')
         self.assertEqual(q1.compare_answer('Olaf'), True)
+        self.assertEqual(q1.compare_answer('olaf'), True)
         self.assertEqual(q1.compare_answer('Elsa'), False)
 
 class MultipleChoiceTest(unittest.TestCase):
@@ -51,12 +59,20 @@ class MultipleChoiceTest(unittest.TestCase):
         self.assertEqual(q2.title, 'Frozen')
         self.assertEqual(q2.choices, {'a' : 'seven', 'b' : 'eleven', 'c' : 'twelve'})
 
+    def test_str(self):
+        """
+        Tests the string method in the multiple choice class
+        """
+        q2 = MultipleChoiceTest.mkQ('Frozen', 'How many brothers does Prince Hans have?', 'c', {'a' : 'seven', 'b' : 'eleven', 'c' : 'twelve'})
+        self.assertEqual(str(q2), "Movie: Frozen \nQuestion: How many brothers does Prince Hans have? \n\na: seven\nb: eleven\nc: twelve\n")
+
     def test_compare_answer(self):
         """
         Tests the compare answer method in the multiple choice class
         """
         q2 = MultipleChoiceTest.mkQ('Frozen', 'How many brothers does Prince Hans have?', 'c', {'a' : 'seven', 'b' : 'eleven', 'c' : 'twelve'})
         self.assertEqual(q2.compare_answer('c'), True)
+        self.assertEqual(q2.compare_answer('C'), True)
         self.assertEqual(q2.compare_answer('a'), False)
         self.assertEqual(q2.compare_answer('b'), False)
         self.assertEqual(q2.compare_answer('win'), 'incorrect entry')
@@ -80,6 +96,13 @@ class TrueOrFalseTest(unittest.TestCase):
         self.assertEqual(q3.question, 'Flora dresses in red, Fauna in green, Merryweather in blue.')
         self.assertEqual(q3.answer, 'True')
         self.assertEqual(q3.title, 'Sleeping Beauty')
+
+    def test_str(self):
+        """
+        Tests the string method in the true or false class
+        """
+        q3 = TrueOrFalseTest.mkQ('Sleeping Beauty', 'Flora dresses in red, Fauna in green, Merryweather in blue.', 'True')
+        self.assertEqual(str(q3), 'Movie: Sleeping Beauty \nQuestion: Flora dresses in red, Fauna in green, Merryweather in blue. \n')
 
     def test_compare_answer(self):
         """
@@ -113,14 +136,33 @@ class QuizTest(unittest.TestCase):
         self.assertEqual(quiz.lives, 3)
         self.assertEqual(quiz.points, 0)
 
+    def test_str(self):
+        """
+        Tests the string method in the quiz class
+        """
+        quiz3 = QuizTest.mkQuiz()
+        q4 = MultipleChoiceTest.mkQ('Frozen', 'How many brothers does Prince Hans have?', 'c', {'a' : 'seven', 'b' : 'eleven', 'c' : 'twelve'})
+        q5 = tg.TrueOrFalse('Sleeping Beauty', 'Flora dresses in red, Fauna in green, Merryweather in blue.', 'True')
+        list_of_mc = [q4]
+        list_of_tf = [q5]
+        quiz3.add_question(list_of_mc)
+        self.assertEqual(str(quiz3), "Multiple Choice \nMovie: Frozen \nQuestion: How many brothers does Prince Hans have? \n\na: seven\nb: eleven\nc: twelve\n\n")
+        quiz3.add_question(list_of_tf)
+        self.assertEqual(str(quiz3), "Multiple Choice \nMovie: Frozen \nQuestion: How many brothers does Prince Hans have? \n\na: seven\nb: eleven\nc: twelve\n\nTrue or False \nMovie: Sleeping Beauty \nQuestion: Flora dresses in red, Fauna in green, Merryweather in blue. \n\n")
+
     def test_add_question(self):
         """
         Tests the add question method in the quiz class
         """
         quiz1 = QuizTest.mkQuiz()
-        list = ['What time is it?']
-        quiz1.add_question(list)
-        self.assertEqual(quiz1.list_of_q, {type('str') : ['What time is it?']})
+        q2 = MultipleChoiceTest.mkQ('Frozen', 'How many brothers does Prince Hans have?', 'c', {'a' : 'seven', 'b' : 'eleven', 'c' : 'twelve'})
+        q5 = tg.TrueOrFalse('Sleeping Beauty', 'Flora dresses in red, Fauna in green, Merryweather in blue.', 'True')
+        list_of_mc = [q2]
+        list_of_tf = [q5]
+        quiz1.add_question(list_of_mc)
+        self.assertEqual(quiz1.list_of_q, {tg.MultipleChoice : list_of_mc})
+        quiz1.add_question(list_of_tf)
+        self.assertEqual(quiz1.list_of_q, {tg.MultipleChoice : list_of_mc, tg.TrueOrFalse : list_of_tf})
 
     def test_get_rand_quest(self):
         """

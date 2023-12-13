@@ -41,3 +41,7 @@ h: 0
 None: 20
 t: 50
 cindy: 20
+t: 50
+sammy: 50
+janice: 0
+rachel: 20
