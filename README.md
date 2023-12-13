@@ -18,6 +18,10 @@ out of lives (every player starts with 3 lives). At the end, a screen will pop u
 saying wether you won or lost, and then, a leaderboard will appear with the top 3 
 highest scorers. 
 
+If you press cancel on the choose a type of question screen, the game will prompt
+you to try again. Cancel only exits out of the game if it is pressed while on a 
+multiple choice or true or false question. 
+
 ## Markdown
 
 This README file supports Markdown syntax and so I can create
@@ -29,12 +33,12 @@ This repository should contain the following folders/files:
 - trivia_game.py
 - true_or_false.csv
 - multiple_choice.csv
-- testing.py
+- trivia_game_test.py
 - leaderboard.txt
 The `trivia_game.py` file contains the code to produce questions and compare answers
 this file produces a gui for the user to play the trivia game. 
 The `true_or_false.csv` file contains all the true or false questions.
 The `multiple_choice.csv` file contains all the multiple choice questions.
-The `testing.py` file contains the unit tests for the trivia_game.py file.
+The `trivia_game_test.py` file contains the unit tests for the trivia_game.py file.
 The `leaderboard.txt` file contains the names of past people who have played the game
 along with their scores so that a leaderboard can be created.
